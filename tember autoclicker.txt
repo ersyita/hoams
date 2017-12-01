@@ -1,0 +1,158 @@
+// ==UserScript==
+// @name         VPS2
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  try to take over the world!
+// @author       You
+// @match        *://www.sunriseclix.com/*
+// @match        *://www.uniclique.net/*
+// @match        *://megacashbux.com/*
+// @match        *://www.buxice.com/*
+// @match        *://www.nivnisclicks.com/*
+// @match        *://likesclick.com/*
+// @match        *://www.eldibux.com/*
+// @match        *://www.clixserv.com/*
+// @match        *://www.croclix.me/*
+
+// @match        *://www.ekoclix.com/*
+
+
+
+
+
+
+
+
+// @grant        none
+// ==/UserScript==
+
+var waittime = 7000; // ADS wait seconds
+
+var urls = ["http://www.sunriseclix.com/",     //1
+            "http://www.uniclique.net/",      //4
+            "http://megacashbux.com/",        //5
+            "http://www.buxice.com/",         //6
+            "http://www.nivnisclicks.com/",   //7
+            "http://likesclick.com/",         //8
+            "http://www.eldibux.com/",        //9            
+            "http://www.clixserv.com/",       //9
+           "http://www.croclix.me/",          //3
+
+           "http://www.ekoclix.com/"];        //10
+
+var titles =    ["Viclix", "Lexiadz.com", "Clikerz.net", "Virn.co", "Oliveadverts.com", "Earn $.1", "Earn $.1 + 1 Point ", "Instant Payment ! ", "Free RRs ! ",   "MIN Payout $2 ", "Join Us ! " ,  "Tons Of Dollars$$ " ,  "See The New PTC world  " ,  "Since 2012 " ,  "Since 2014 " ,  "TOP 10 PTC Sites " ,  " Best Admins and trusted  " ,  "See Our Ref Market "  ,  " New PTC Have Autoserf " ,  "Ultamate Network " ,  " MIN$2 for Cashout " ,  " $1 MIN Payout  " ,  "Free Golden Membership "  ,  " 1 Free RRs For All Users ",  "$1 Gift For First 10K Members " ,  " $3 In Your Main Balance  " ,  " The Best AD Banner Network " ,  " See Our Rotater " ,  " Rotate 4U " ,  "Adz2you.com " ,  "Rotate 2U " ,  "Rotate With Us  " , " Trusted  Admins ",  "Best PTC Monitoring  ",  "Clicks-wall.com ",  "Ultimateclixx.com"];
+var subtitles = ["Instant Payment ! Free RRs ! Join Us Now ! " , " Part Of VIRN.CO" , " One Of Virn.co Group  " , "Free RRs For All Memebers ! ", "Trusted Admin  " , " Free 7 Golden Days  " , "Free RRs For All Users " , " 1 Free RRs For Firsrt 10K members " , " Since 2012  " , " King Of PTC " , " Earn 1 Bitcoin " , " Paypal Invested & Cashouts ! " , " This Site Support Paypal !  " , " We Support 12 Banks  " , " No Cashout Fees " , " Instant Payment " , " Join US Now"  , " See The New World Order " , " List Of Oldest PTC Sites" , " Top PTC Sites " , " All Admins Who Have More Than 1 Site  " , " Set And Get Paid "  ,  "See Our Network  ! " , " Best Of Beat  ! " , "Since 2 years  ! "  , "Earn $1  ! sub" , "Earn $1 + 1 Point  ! " , "No Manual  Payment Any More  ! " , "Join Us And Get Your Free RRs " , "Just $2 For Cashout ! " , "What You Waiting For ! sub" , "Admin Since 2007  ! " , "Top 40 PTC Site  ! " ,  "Instant Payment ! Free RR For ! "];
+
+var url1 = ["https://goo.gl/tqpTtE", "https://goo.gl/tqpTtE"]; // url
+var url2 = ["https://goo.gl/tqpTtE", "https://goo.gl/tqpTtE"]; // Image url
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+var index = urls.indexOf('http://'+window.location.hostname+'/');
+var url = window.location.protocol+'//'+window.location.hostname+'/';
+
+var random = Math.floor((Math.random() * titles.length) + 1);
+
+var title = titles[random];
+var subtitle = subtitles[random];
+
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+    results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+jQuery(window).load(function () {
+    if(document.URL == url+'?view=account&page=newad&class=ads'){
+        //alert(1);
+        var t = new Date().getTime();
+        setTimeout(function(){
+            $('#title').val(title);
+            $('#subtitle').val(subtitle);
+            $('#url').val('https://goo.gl/tqpTtE');
+            $('#imgurl').val('https://goo.gl/tqpTtE');
+            $('#advalue option:last').prop('selected', 'selected');
+            $('#checkall').prop('checked', true);
+            $('.checkall').attr('checked', true);
+            //$('#checkall').trigger("click").trigger("change");
+            $('#terms').prop('checked', true);
+            $('#create_ad').submit();
+        }, 3000);
+
+        setTimeout(function(){
+            window.location.href = url+'index.php?view=account&page=manageads';
+        }, 5000);
+    }
+
+    if(document.URL == url+'index.php?view=account&page=manageads'){
+        var aid = $("a:contains('CLICK HERE TO VALIDATE THIS AD')").attr('href');
+        var id = getParameterByName('id', aid);
+        if(id){
+            setTimeout(function(){
+                window.location.href = url+'?view=account&page=allocate&class=ads&aid='+id;
+            }, 3000);
+        }
+        if($("a:contains('Records not found')")){
+            setTimeout(function(){
+                //window.location.reload(1);
+                window.location.href = url+'?view=account&page=newad&class=ads';
+            }, 5000);
+        }
+    }
+
+    if(window.location.href.indexOf('?view=account&page=allocate&class=ads&aid') > -1){
+        var aid2 = $("a:contains('CLICK HERE TO VALIDATE THIS AD')").attr('href');
+        var id2 = getParameterByName('id', aid2);
+        if(id2){
+            setTimeout(function(){
+                window.location.href = url+'?view=account&page=allocate&class=ads&aid='+id2;
+            }, 3000);
+            return false;
+        }
+
+        var adid = getParameterByName('aid', window.location.href);
+        setTimeout(function(){
+            $('#allocate').val(1);
+        }, 3000);
+        setTimeout(function(){
+            $('#allocateform').submit();
+        }, 5000);
+        setTimeout(function(){
+            window.location.href = url+'index.php?view=account&page=manageads&godelete='+adid;
+        }, waittime);
+    }
+
+    if(window.location.href.indexOf('index.php?view=account&page=manageads&godelete=') > -1){
+        var adid2 = getParameterByName('godelete', window.location.href);
+        var del = $("a:contains('Delete')");
+        setTimeout(function(){
+            //adcontrol(adid2, 'delete', 'ads');
+            var otherid;
+            $("a:contains('Delete')").each(function () {
+                otherid = $(this).attr('onclick').replace(/[^0-9]/g, '');
+                adcontrol(otherid, 'delete', 'ads');
+            });
+
+            setTimeout(function(){
+                var index2 = index+1;
+                if(typeof urls[index2] === 'undefined'){
+                    index2 = 0;
+                }
+                window.location.href = urls[index2]+'?view=account&page=newad&class=ads';//url+'index.php?view=account&page=manageads';
+            }, 4000);
+        }, 7000);
+    }
+});
+
+setTimeout(function(){
+    var index3 = index+1;
+    if(typeof urls[index3] === 'undefined'){
+        index3 = 0;
+    }
+    window.location.href = urls[index3]+'?view=account&page=newad&class=ads';//url+'index.php?view=account&page=manageads';
+}, 30000);
